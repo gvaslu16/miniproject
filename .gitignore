@@ -26,3 +26,16 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+## Bibliography auxiliary files (bibtex/biblatex/biber):
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.brf
+*.run.xml
+
+##OTHER
+*.bak
+*.bib
