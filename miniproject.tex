@@ -123,18 +123,19 @@ contain the as many values, as the number of iterations the CORDIC algorithm
 is designed to take.
 
 \subsection{Precedence graph (PG)}
+The precedence graph
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = \linewidth,trim=0 23cm 0 0]{sequencediagram.pdf}
-	\caption{Sequence diagram for CORDIC}
-	\label{fig:cordic_sd}
+	\includegraphics[width = \linewidth,trim=0 22.9cm 0 2cm, clip]{sequencediagram.pdf}
+	\caption{Precedence graph for CORDIC}
+	\label{fig:cordic_pg}
 \end{figure}
 
 \subsection{Hardware mapping}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules.pdf}
+	\includegraphics[height = \textwidth,angle=91, trim=6.5cm 3.5cm 1.5cm 3cm, clip]{schedules.pdf}
 	\caption{1:1 hardware mapping, and fully shared ALU for CORDIC}
 	\label{fig:schedules}
 \end{figure}
