@@ -111,14 +111,6 @@ and $y_{i+1}$ will affect the architecture of the system.
 \end{figure}
 
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules.pdf}
-	\caption{Schedules for CORDIC}
-	\label{fig:schedules}
-
-\end{figure}
-
 \subsection{Precedence graph (PG)}
 \begin{figure}[H]
 	\centering
@@ -128,6 +120,21 @@ and $y_{i+1}$ will affect the architecture of the system.
 \end{figure}
 
 \subsection{Hardware mapping}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules.pdf}
+	\caption{1:1 hardware mapping, and fully shared ALU for CORDIC}
+	\label{fig:schedules}
+\end{figure}
+	
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules_1.pdf}
+	\caption{Middle ground for hardware mapping for CORDIC}
+	\label{fig:schedules_1}
+\end{figure}
 
 \subsection{Control data flow graph (CDFG)}\label{ssec:cdfg}
 
