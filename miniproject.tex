@@ -3,7 +3,6 @@
 \usepackage{graphicx}
 \graphicspath{ {references/} }
 
-\usepackage{todonotes}
 
 \usepackage{float}%figures placed HERE
 
@@ -64,7 +63,7 @@ to take the next step, and approximate the target, as seen in figure \ref{fig:co
 
 The generalized equations of the CORDIC algorithm are:
 \[ x_{i+1} = x_i - \sigma_i \cdot 2^{-i} \cdot y_i \]
-\[ y_{i+1} = y_i - \sigma_i \cdot 2^{-i} \cdot x_i \]
+\[ y_{i+1} = \sigma_i \cdot 2^{-i} \cdot x_i + y_i\]
 \[ z_{i+1} = z_i - \sigma_i \cdot arctan(2^{-i}) \]
 
 %https://en.wikibooks.org/wiki/Trigonometry/For_Enthusiasts/The_CORDIC_Algorithm
@@ -98,8 +97,12 @@ to apply the following operations: addition, bitshift and comparison.
 \subsection{Data flow graph (DFG)}
 The data flow graph in figure \ref{fig:cordic_dfg} presents the data dependencies
 in the CORDIC algorithm. There are two bit shifting operations, and three
-addition/subtraction operations. More information about how these operations
-are executed can be found in \ref{ssec:cdfg}. The group had difficulties 
+addition/subtraction operations. 
+
+%More information about how these operations
+%are executed can be found in \ref{ssec:cdfg}. 
+
+The group had difficulties 
 in completely understanding how the interdependency between $x_{i+1}$
 and $y_{i+1}$ will affect the architecture of the system.
 
@@ -110,6 +113,14 @@ and $y_{i+1}$ will affect the architecture of the system.
 	\label{fig:cordic_dfg}
 \end{figure}
 
+The two shift operations ($>>n$) represent the $2^{-i}$ part of each transfer 
+function. This has to be controlled by $i$. The same applies for the to 
+additions, for computing $x_{i+1}$ and $y_{i+1}$, which will in fact 
+either add or subtract the result of the shift, based on $z_i$. These aspects
+will be analysed in \ref{ssec:fsdm}. $z_i$ relies on a table containing the 
+values of precomputed values for $arctan$. This is stored in memory, and will
+contain the as many values, as the number of iterations the CORDIC algorithm 
+is designed to take.
 
 \subsection{Precedence graph (PG)}
 \begin{figure}[H]
@@ -136,9 +147,14 @@ and $y_{i+1}$ will affect the architecture of the system.
 	\label{fig:schedules_1}
 \end{figure}
 
-\subsection{Control data flow graph (CDFG)}\label{ssec:cdfg}
+\subsection{Finite state machine with data path (FSDM)}\label{ssec:fsdm}
 
-\subsection{Finite state machine with data path (FSDM)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = \linewidth]{finite_state_machine_edit.jpg}
+	\caption{Finite State Machine with Data Path}
+	\label{fig:finite_state_machine}
+\end{figure}
 
 \printbibliography
 
