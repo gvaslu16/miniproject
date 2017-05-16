@@ -96,7 +96,7 @@ to apply the following operations: addition, bitshift and comparison.
 \section{From algorithm to architecture}
 
 \subsection{Data flow graph (DFG)}
-The data flow graph in figure \ref{fig:dfg} presents the data dependencies
+The data flow graph in figure \ref{fig:cordic_dfg} presents the data dependencies
 in the CORDIC algorithm. There are two bit shifting operations, and three
 addition/subtraction operations. More information about how these operations
 are executed can be found in \ref{ssec:cdfg}. The group had difficulties 
@@ -105,12 +105,27 @@ and $y_{i+1}$ will affect the architecture of the system.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[clip, trim=2cm 7cm 2.2cm 2.5cm, width = \linewidth,angle=90]{cordic_dfg.pdf}
-	\caption{DFG for CORDIC}
-	\label{fig:dfg}
+	\includegraphics[width = \linewidth,angle=90]{cordic_dfg.pdf}
+	\caption{Data flow graph for CORDIC}
+	\label{fig:cordic_dfg}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules.pdf}
+	\caption{Schedules for CORDIC}
+	\label{fig:schedules}
+
 \end{figure}
 
 \subsection{Precedence graph (PG)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = \linewidth,trim=0 23cm 0 0]{sequencediagram.pdf}
+	\caption{Sequence diagram for CORDIC}
+	\label{fig:cordic_sd}
+\end{figure}
 
 \subsection{Hardware mapping}
 
