@@ -57,11 +57,11 @@ to take the next step, and approximate the target, as seen in figure \ref{fig:co
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 7cm]{cordic_iterations.png}
-	\caption{Ilustration of cordic iterations}
+	\caption{Ilustration of cordic iterations. V3 is the desired rotation for V0,
+	while V1 and V2 are the approximation steps CORDIC takes}
 	\label{fig:cordic_iterations}
 \end{figure}
 
-\todo[inline]{redo the figure}
 The generalized equations of the CORDIC algorithm are:
 \[ x_{i+1} = x_i - \sigma_i \cdot 2^{-i} \cdot y_i \]
 \[ y_{i+1} = y_i - \sigma_i \cdot 2^{-i} \cdot x_i \]
@@ -93,25 +93,30 @@ making it a constant. For small architectures, this aspect can be disregarded.
 These being said, by looking at the equations we can see that we will need 
 to apply the following operations: addition, bitshift and comparison.
 
-\section{The algorithm}
+\section{From algorithm to architecture}
 
 \subsection{Data flow graph (DFG)}
+The data flow graph in figure \ref{fig:dfg} presents the data dependencies
+in the CORDIC algorithm. There are two bit shifting operations, and three
+addition/subtraction operations. More information about how these operations
+are executed can be found in \ref{ssec:cdfg}. The group had difficulties 
+in completely understanding how the interdependency between $x_{i+1}$
+and $y_{i+1}$ will affect the architecture of the system.
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = \linewidth,angle=90]{cordic_dfg.pdf}
-	\caption{The CORDIC algorithm}
-	\label{fig:cordic_algorithm}
+	\includegraphics[clip, trim=2cm 7cm 2.2cm 2.5cm, width = \linewidth,angle=90]{cordic_dfg.pdf}
+	\caption{DFG for CORDIC}
+	\label{fig:dfg}
 \end{figure}
 
 \subsection{Precedence graph (PG)}
 
-\section{The architecture}
-
 \subsection{Hardware mapping}
 
-\subsection{Control data flow graph (CDFG)}
+\subsection{Control data flow graph (CDFG)}\label{ssec:cdfg}
 
-\subsection{Finite state machine with data path (FSDM}
+\subsection{Finite state machine with data path (FSDM)}
 
 \printbibliography
 
