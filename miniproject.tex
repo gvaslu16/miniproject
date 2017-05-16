@@ -123,13 +123,21 @@ contain the as many values, as the number of iterations the CORDIC algorithm
 is designed to take.
 
 \subsection{Precedence graph (PG)}
-The precedence graph
+The precedence graph in figure \ref{fig:cordic_pg} shows the ordering of the operations
+from the DFG. This reveals the fact that the three computations can be executed 
+in parallel if the necessary functional units are present.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = \linewidth,trim=0 22.9cm 0 2cm, clip]{sequencediagram.pdf}
 	\caption{Precedence graph for CORDIC}
 	\label{fig:cordic_pg}
 \end{figure}
+
+Based on the precedence graph, we can now look into the hardware necessary for
+computing the CORDIC algorithm. At this point, there is no reason to further
+analyse the precedence graph. This is only composed of two identical 
+critical paths (shift and addition) and an addition.
 
 \subsection{Hardware mapping}
 
