@@ -139,7 +139,7 @@ computing the CORDIC algorithm. At this point, there is no reason to further
 analyse the precedence graph. This is only composed of two identical 
 critical paths (shift and addition) and an addition.
 
-\subsection{Hardware mapping}
+\subsection{Hardware mapping} \label{hw_mapping}
 Figure \ref{fig:schedules} represents two ways of mapping the operations in the
 CORDIC algorithm to functional unit. On the right side of the drawing, each operation
 is exectuted on its own shifter/adder. The characteristics of this setup are:
@@ -212,6 +212,13 @@ is that $i$ will be counting up to 40, and the $arctan$ table stored in memory
 will have the values for the first 40 angles.
 
 \subsection{Finite state machine with data path (FSDM)}\label{ssec:fsdm}
+A finite state machine dictates the states a system has to go through.
+For our CORDIC algorithm, we have to start it, keep track of the iterations
+and stop it when we are done computing with the desired accuracy. 
+The datapath represents the data processing operations taken by the hardware.
+Figure \ref{fig:finite_state_machine} represents the FSDM for our CORDIC
+implementation. The red box is the finite state machine, containing 5 states,
+and the right section is the datapath. 
 
 \begin{figure}[H]
 	\centering
@@ -220,6 +227,43 @@ will have the values for the first 40 angles.
 	\label{fig:finite_state_machine}
 \end{figure}
 
+\paragraph{The datapath}
+contains the functional units discussed in \ref{hw_mapping}, in the 1:1 mapping
+scenario. The inputs are the initial values of $x_0$, $y_0$ and $z_0$. The outputs
+$x_{out}$ and $y_{out}$
+come out of the output register, after the algorithm has executed the desired
+number of times. All the functional units are controlled by the control unit, 
+through the red connection lines. $z_i$ is fed back into the control unit, 
+so that it can decide the sign to be used in the next iteration.
+
+\paragraph{The controller}
+contains the states the system has to go through. The control unit takes
+$z_i$ as input and based of the value of $i$ it generates the next state.
+$i$ is not modelled in the figure, it works by incrementing its previous
+value by 1. Each state is characterised by its outputs, on the control
+lines. These are:
+
+\begin{itemize}
+	\item select - telling the multiplexers whether to choose the initial 
+	inputs  $x_0$, $y_0$ and $z_0$, or use the previous values of 
+	$x$, $y$ and $z$
+	\item OP code - telling the ALUs the operation they need to execute:
+	addition and subtraction. Note that for the computation of $y_{i+1}$
+	OP code is inverted, to reflect the CORDIC algorithm precisely
+	\item i - the current iteration. This is used by the shifters, to 
+	know the number of positions they need to shift, and by the $arctan$
+	lookup table
+	\item CLK - the clock signal telling the registers when to release their
+	values, in order to start the next iteration. CLK/n tells the output registers
+	when to output the final values of the computations
+\end{itemize}
+
+These control outputs can be seen at the bottom of each state, the notation for them being:
+\[(select,\, OP\, code,\, value\, of\, i,\, CLK/n\,(output\, the\, values)\]
+
+There are five states:
+
+\newpage
 \printbibliography
 
 \end{document}
