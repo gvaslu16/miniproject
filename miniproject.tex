@@ -1,5 +1,6 @@
 \documentclass[12pt, a4paper,oneside]{article}
 
+\usepackage{multirow}
 \usepackage{graphicx}
 \graphicspath{ {references/} }
 
@@ -255,15 +256,28 @@ path. These are:
 	know the number of positions they need to shift, and by the $arctan$
 	lookup table
 	\item CLK - the clock signal telling the registers when to release their
-	values, in order to start the next iteration. CLK/n tells the output registers
+	values, in order to start the next iteration. CLK/n is the clock scaled
+	to pulse only on every $n^{th}$ pulse. It is used to instruct the output registers
 	when to output the final values of the computations
 \end{itemize}
 
 These control outputs can be seen at the bottom of each state, the notation for them being:
-\[(select,\, OP\, code,\, value\, of\, i,\, CLK/n\,(output\, the\, values)\]
+\[(select,\, OP\, code,\, value\, of\, i,\, CLK/n\,(output\, the\, values))\]
 Where $n$ denotes the number of iterations.
 
 There are five states:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{| c | c c c c c |}
+	\hline
+		\multirow{2}{*}{Conditions}
+				& $i = 0$			& $i > 0$ 			& $i > 0$			& $i = n$			& $i = n$		\\
+				& 					& $z_i >= 0$ 		& $z_i < 0$			& $z_i >= 0$		& $z_i < 0$		\\
+	\hline
+		State	& $(0, 1, 0, 0)$	& $(1, 1, i, 0)$	& $(1, -1, i, 0)$	& $(1, 1, i, 1)$	& $(1, -1, i, 1)$						\\
+	\hline
+	\end{tabular}
+\end{table}
 
 \newpage
 \printbibliography
