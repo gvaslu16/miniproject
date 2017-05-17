@@ -91,7 +91,7 @@ However, there are several methods to do this by calculating it in advance or by
 making it a constant. For small architectures, this aspect can be disregarded.
 \\
 This being said, by looking at the equations we can see that we will need 
-to apply the following operations: addition, bitshift and comparison.
+to apply the following operations: addition and bitshift.
 
 \section{From algorithm to architecture}
 
@@ -219,7 +219,7 @@ and stop it when we are done computing with the desired accuracy.
 The data path represents the data processing operations taken by the hardware.
 Figure \ref{fig:finite_state_machine} represents the FSDM for our CORDIC
 implementation. The red box is the finite state machine, containing 5 states,
-red lines are the control path and blue denotes the data path.
+red lines are the control path and blue units denote the data path.
 
 \begin{figure}[H]
 	\centering
@@ -239,7 +239,7 @@ so that it can decide the sign to be used in the next iteration.
 
 \paragraph{The controller}
 contains the states the system has to go through. The control unit takes
-$z_i$ as input and based of the value of this and $i$ it computes the next state.
+$z_i$ as input. Based of the value of $z_i$ and $i$ it computes the next state.
 $i$ is not modelled in the figure; it works by incrementing its previous
 value by 1. Each state is characterised by its outputs, on the control
 path. These are:
@@ -265,7 +265,7 @@ These control outputs can be seen at the bottom of each state, the notation for 
 \[(select,\, OP\, code,\, value\, of\, i,\, CLK/n\,(output\, the\, values))\]
 Where $n$ denotes the number of iterations.
 
-There are five states:
+These are the five states:
 \begin{table}[H]
 	\centering
 	\begin{tabular}{| c | c c c c c |}
