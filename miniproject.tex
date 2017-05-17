@@ -140,21 +140,68 @@ analyse the precedence graph. This is only composed of two identical
 critical paths (shift and addition) and an addition.
 
 \subsection{Hardware mapping}
+Figure \ref{fig:schedules} represents two ways of mapping the operations in the
+CORDIC algorithm to functional unit. On the right side of the drawing, each operation
+is exectuted on its own shifter/adder. The characteristics of this setup are:
 
-\begin{figure}[H]
+\begin{itemize}
+	\item 2 shifters
+	\item 2 adders
+	\item 2 time units execution time
+	\item the area for building the hardware is presumably large, but the execution time
+	is short 
+\end{itemize}
+
+
+\begin{figure}[h]
 	\centering
 	\includegraphics[height = \textwidth,angle=91, trim=6.5cm 3.5cm 1.5cm 3cm, clip]{schedules.pdf}
 	\caption{1:1 hardware mapping, and fully shared ALU for CORDIC}
 	\label{fig:schedules}
 \end{figure}
-	
+
+On the left side of figure \ref{fig:schedules}, we have shared an ALU for all the 
+operations:
+
+\begin{itemize}
+	\item 1 ALU able to execute addition, subtraction and bit shifting
+	\item 5 time units execution time
+	\item the are occupied by the ALU is small, but the execution time is long.
+	We should also keep in mind that we need to add some delays in the DFG so
+	that the data is available at the proper time for the ALU to compute. 
+	These delays materialise in registers, which will increase the area slightly.
+\end{itemize}
+
+Figure \ref{fig:schedules_1} represents some intermediate solutions to mapping
+the hardware. In the first scenario, on the right side there is:
+
+\begin{itemize}
+	\item 1 shifter
+	\item 1 ALU
+	\item 3 time units execution time
+	\item This solution includes a physical shifter, instead of using the
+	ALU. The shifter has such a simple functionality, that it should not take
+	too big area. However, by doing this, the execution time is reduced by 2
+	time units, in comparison to the purely ALU solution
+\end{itemize}	
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[height = \textwidth,angle=91, trim=7cm 5cm 1.5cm 5cm]{schedules_1.pdf}
+	\includegraphics[height = \textwidth,angle=91, trim=11.5cm 3.5cm 1.5cm 3.5cm, clip]{schedules_1.pdf}
 	\caption{Middle ground for hardware mapping for CORDIC}
 	\label{fig:schedules_1}
 \end{figure}
+
+On the left side of the drawing there is yet another variation of the architecture:
+
+\begin{itemize}
+	\item 2 shifters
+	\item 1 ALU
+	\item 3 time units execution time
+	\item Here can be seen that by using two separate sifters, the execution time
+	is not improved. There might be other algorithms where this approach might have worked,
+	but this is not the case of CORDIC.
+\end{itemize}
 
 \subsection{Finite state machine with data path (FSDM)}\label{ssec:fsdm}
 
