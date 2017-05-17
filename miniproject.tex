@@ -57,7 +57,7 @@ to take the next step, and approximate the target, as seen in figure \ref{fig:co
 	\centering
 	\includegraphics[width = 7cm]{cordic_iterations.png}
 	\caption{Ilustration of cordic iterations. V3 is the desired rotation for V0,
-	while V1 and V2 are the approximation steps CORDIC takes}
+	while V1 and V2 are the approximation steps CORDIC takes\cite{cordic2}}
 	\label{fig:cordic_iterations}
 \end{figure}
 
@@ -198,10 +198,18 @@ On the left side of the drawing there is yet another variation of the architectu
 	\item 2 shifters
 	\item 1 ALU
 	\item 3 time units execution time
-	\item Here can be seen that by using two separate sifters, the execution time
+	\item Here can be seen that by using two separate shifters, the execution time
 	is not improved. There might be other algorithms where this approach might have worked,
 	but this is not the case of CORDIC.
 \end{itemize}
+
+As seen in the figures, the group mainly focused on the \textit{Bit parallel,
+iterative} implementation. This means that the algorithm will be iterated on 
+the same hardware for a number of times, before outputting the final result.
+Typically, 40 iterations are enough for most purposes, as the result will be \
+correct to the 10th decimal place\cite{cordic2}. What this means in practice,
+is that $i$ will be counting up to 40, and the $arctan$ table stored in memory
+will have the values for the first 40 angles.
 
 \subsection{Finite state machine with data path (FSDM)}\label{ssec:fsdm}
 
