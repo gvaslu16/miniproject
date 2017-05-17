@@ -53,7 +53,7 @@ final result, using a table containing angles to be used in the next iteration
 (micro-rotation). These angles can be either added or subtracted in order
 to take the next step, and approximate the target, as seen in figure \ref{fig:cordic_iterations}.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width = 7cm]{cordic_iterations.png}
 	\caption{Ilustration of cordic iterations. V3 is the desired rotation for V0,
@@ -89,7 +89,7 @@ $$K_i = \frac{1}{\sqrt{1 + 2^{-2i}}}$$
 However, there are several methods to do this by calculating it in advance or by 
 making it a constant. For small architectures, this aspect can be disregarded.
 \\
-These being said, by looking at the equations we can see that we will need 
+This being said, by looking at the equations we can see that we will need 
 to apply the following operations: addition, bitshift and comparison.
 
 \section{From algorithm to architecture}
@@ -118,13 +118,13 @@ function. This has to be controlled by $i$. The same applies for the to
 additions, for computing $x_{i+1}$ and $y_{i+1}$, which will in fact 
 either add or subtract the result of the shift, based on $z_i$. These aspects
 will be analysed in \ref{ssec:fsdm}. $z_i$ relies on a table containing the 
-values of precomputed values for $arctan$. This is stored in memory, and will
+values of precomputed values for $arctan$. This is stored in ROM, and will
 contain the as many values, as the number of iterations the CORDIC algorithm 
 is designed to take.
 
 \subsection{Precedence graph (PG)}
 The precedence graph in figure \ref{fig:cordic_pg} shows the ordering of the operations
-from the DFG. This reveals the fact that the three computations can be executed 
+from the DFG. This reveals the fact that the three computations, $x_{i+1}$; $y_{i+1}$ and $z_{i+1}$, can be executed 
 in parallel if the necessary functional units are present.
 
 \begin{figure}[H]
@@ -142,16 +142,28 @@ critical paths (shift and addition) and an addition.
 \subsection{Hardware mapping} \label{hw_mapping}
 Figure \ref{fig:schedules} represents two ways of mapping the operations in the
 CORDIC algorithm to functional unit. On the right side of the drawing, each operation
-is exectuted on its own shifter/adder. The characteristics of this setup are:
+is executed on its own shifter/adder. The characteristics of this setup are:
 
 \begin{itemize}
 	\item 2 shifters
 	\item 2 adders
-	\item 2 time units execution time
+	\item execution time is 2 time units
 	\item the area for building the hardware is presumably large, but the execution time
-	is short 
+	is short
 \end{itemize}
 
+
+On the left side of figure \ref{fig:schedules}, an ALU is shared for all the
+operations:
+
+\begin{itemize}
+	\item 1 ALU able to execute addition, subtraction and bit shifting
+	\item execution time is 5 time units
+	\item the area occupied by the ALU is small, but the execution time is long.
+	We should also keep in mind that we need to add some delays in the DFG so
+	that the data is available at the proper time for the ALU to compute.
+	These delays materialise in registers, which will increase the area slightly.
+\end{itemize}
 
 \begin{figure}[h]
 	\centering
@@ -160,30 +172,18 @@ is exectuted on its own shifter/adder. The characteristics of this setup are:
 	\label{fig:schedules}
 \end{figure}
 
-On the left side of figure \ref{fig:schedules}, we have shared an ALU for all the 
-operations:
-
-\begin{itemize}
-	\item 1 ALU able to execute addition, subtraction and bit shifting
-	\item 5 time units execution time
-	\item the are occupied by the ALU is small, but the execution time is long.
-	We should also keep in mind that we need to add some delays in the DFG so
-	that the data is available at the proper time for the ALU to compute. 
-	These delays materialise in registers, which will increase the area slightly.
-\end{itemize}
-
 Figure \ref{fig:schedules_1} represents some intermediate solutions to mapping
 the hardware. In the first scenario, on the right side there is:
 
 \begin{itemize}
 	\item 1 shifter
 	\item 1 ALU
-	\item 3 time units execution time
+	\item execution time is 3 time units
 	\item This solution includes a physical shifter, instead of using the
-	ALU. The shifter has such a simple functionality, that it should not take
-	too big area. However, by doing this, the execution time is reduced by 2
+	ALU. The shifter has such a simple functionality, that it should not too
+	much to the area. However, by doing this, the execution time is reduced by 2
 	time units, in comparison to the purely ALU solution
-\end{itemize}	
+\end{itemize}
 
 \begin{figure}[H]
 	\centering
@@ -197,7 +197,7 @@ On the left side of the drawing there is yet another variation of the architectu
 \begin{itemize}
 	\item 2 shifters
 	\item 1 ALU
-	\item 3 time units execution time
+	\item execution time is 3 time units
 	\item Here can be seen that by using two separate shifters, the execution time
 	is not improved. There might be other algorithms where this approach might have worked,
 	but this is not the case of CORDIC.
@@ -208,17 +208,17 @@ iterative} implementation. This means that the algorithm will be iterated on
 the same hardware for a number of times, before outputting the final result.
 Typically, 40 iterations are enough for most purposes, as the result will be \
 correct to the 10th decimal place\cite{cordic2}. What this means in practice,
-is that $i$ will be counting up to 40, and the $arctan$ table stored in memory
+is that $i$ will be counting up to 40, and the $arctan$ table stored in ROM
 will have the values for the first 40 angles.
 
 \subsection{Finite state machine with data path (FSDM)}\label{ssec:fsdm}
 A finite state machine dictates the states a system has to go through.
 For our CORDIC algorithm, we have to start it, keep track of the iterations
 and stop it when we are done computing with the desired accuracy. 
-The datapath represents the data processing operations taken by the hardware.
+The data path represents the data processing operations taken by the hardware.
 Figure \ref{fig:finite_state_machine} represents the FSDM for our CORDIC
 implementation. The red box is the finite state machine, containing 5 states,
-and the right section is the datapath. 
+red lines are the control path and blue denotes the data path.
 
 \begin{figure}[H]
 	\centering
@@ -227,29 +227,30 @@ and the right section is the datapath.
 	\label{fig:finite_state_machine}
 \end{figure}
 
-\paragraph{The datapath}
+\paragraph{The data path}
 contains the functional units discussed in \ref{hw_mapping}, in the 1:1 mapping
 scenario. The inputs are the initial values of $x_0$, $y_0$ and $z_0$. The outputs
 $x_{out}$ and $y_{out}$
 come out of the output register, after the algorithm has executed the desired
 number of times. All the functional units are controlled by the control unit, 
-through the red connection lines. $z_i$ is fed back into the control unit, 
+through the red control paths. $z_i$ is fed back into the control unit, 
 so that it can decide the sign to be used in the next iteration.
 
 \paragraph{The controller}
 contains the states the system has to go through. The control unit takes
-$z_i$ as input and based of the value of $i$ it generates the next state.
-$i$ is not modelled in the figure, it works by incrementing its previous
+$z_i$ as input and based of the value of this and $i$ it computes the next state.
+$i$ is not modelled in the figure; it works by incrementing its previous
 value by 1. Each state is characterised by its outputs, on the control
-lines. These are:
+path. These are:
 
 \begin{itemize}
 	\item select - telling the multiplexers whether to choose the initial 
 	inputs  $x_0$, $y_0$ and $z_0$, or use the previous values of 
 	$x$, $y$ and $z$
 	\item OP code - telling the ALUs the operation they need to execute:
-	addition and subtraction. Note that for the computation of $y_{i+1}$
-	OP code is inverted, to reflect the CORDIC algorithm precisely
+	addition and subtraction. Note that it is assumed that the ALU is simple and can only
+	compute additions and subtractions. Thus, OP code can be binary, and for the computation
+	of $y_{i+1}$ the OP code can simple be inverted to reflect the CORDIC algorithm precisely
 	\item i - the current iteration. This is used by the shifters, to 
 	know the number of positions they need to shift, and by the $arctan$
 	lookup table
@@ -260,6 +261,7 @@ lines. These are:
 
 These control outputs can be seen at the bottom of each state, the notation for them being:
 \[(select,\, OP\, code,\, value\, of\, i,\, CLK/n\,(output\, the\, values)\]
+Where $n$ denotes the number of iterations.
 
 There are five states:
 
